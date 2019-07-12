@@ -138,37 +138,15 @@ def generateMap(length, rowY, colX):
     gameMap = addEndTile(gameMap, coordY, coordX, direction, directions)
     return gameMap, idx + 1
 
-def generateBackground(gameMap, backY, backX, mapY, mapX):
-    grass = pygame.image.load("./gameAsset/Grass_Tile.png").convert()
-    backgroundSoil = pygame.image.load("./gameAsset/Soil_Tile.png").convert()
-    backgroundSoil1 = pygame.image.load("./gameAsset/Soil_Tile1.png").convert()
-    backgroundSoil2 = pygame.image.load("./gameAsset/Soil_Tile2.png").convert()
-    backgroundSoil3 = pygame.image.load("./gameAsset/Soil_Tile3.png").convert()
-    water = pygame.image.load("./gameAsset/Water_Tile.png").convert()
-
-    background = []
-    background.extend((backgroundGrass, backgroundSoil, backgroundSoil, backgroundSoil, backgroundSoil2,  backgroundSoil2,  backgroundSoil1, backgroundSoil3, backgroundSoil3 ))
-    backMap =  [[water for x in range(backX)] for y in range(backY)] 
-    for y in range (0, mapY):
-        for x in range (0, mapX):
-            if gameMap[y][x] != "0":
-                backMap[y + 2][x + 2] = grass
-            else:
-                image = random.choice(background)
-                backMap[y + 2][x + 2] = image
-    return backMap
-
 if __name__ == '__main__':
 
     screenX = 16
-    screenY = 12
+    screenY = 10
 
     gameMapX = screenX - 4
     gameMapY = screenY - 4
-
-    gameMap, length = generateMap(40, gameMapY, gameMapX)
-    while length < 40:
-        gameMap, length = generateMap(40, gameMapY, gameMapX)
-        print(length)
-    backMap = generateBackground(gameMap, screenY, screenX, gameMapY,  gameMapX)    
-    display(gameMap, backMap, screenY, screenX, gameMapY, gameMapX)
+    lenRequired = 10
+    gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
+    while length < lenRequired:
+        gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
+    display(gameMap, screenY, screenX, gameMapY, gameMapX)
