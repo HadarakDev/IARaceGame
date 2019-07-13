@@ -145,7 +145,7 @@ if __name__ == '__main__':
 
     gameMapX = screenX - 4
     gameMapY = screenY - 4
-    lenRequired = 40
+    lenRequired = 10
     gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
     while length < lenRequired:
         gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
