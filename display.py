@@ -3,6 +3,9 @@ import random
 from pygame.locals import *
 import numpy as np
 import math
+from Car import *
+from utils import *
+
 
 def generateBackground(gameMap, backY, backX, mapY, mapX):
     backgroundSoil = pygame.image.load("./gameAsset/Soil_Tile.png").convert()
@@ -103,89 +106,81 @@ def getStart(gameMap, mapY, mapX):
                 return y, x, 90
 
 def display(gameMap, screenY, screenX, mapY, mapX):
-         # Initialise screen
+
+    pygame.font.init()
+
+    clock = pygame.time.Clock()
+    font = pygame.font.SysFont("", 20)
+
     pygame.init()
     margin = 200
-    mainClock = pygame.time.Clock()
     screen = pygame.display.set_mode((screenX * 100, screenY * 100))
     pygame.display.set_caption('IA RACE GAME')
-    backMap = generateBackground(gameMap, screenY, screenX, mapY,  mapX)  
+    backMap = generateBackground(gameMap, screenY, screenX, mapY,  mapX)
     displayBackground(backMap, screenY, screenX, screen)
     displayMap(gameMap, screen, mapY, mapX, margin)
     pygame.display.flip()
-    
-    left = False
-    right = False
-    forward = False
-    backward = False
 
+    # Params position initiale voiture
     carPosY, carPosX, baseDegree = getStart(gameMap, mapY, mapX)
-    car = pygame.transform.rotate(car, baseDegree)
-    degree = 0
-    print(carPosY)
-    carPosY = margin + 35 + carPosY * 100
-    carPosX = margin + 35 + carPosX * 100
-    speed = 1
-    # Event loop
-    while 1:
-        degree = 0
-        print(baseDegree)
-        if right: # don't need == True
-            degree -= 2
-            while degree < 0:
-                degree += 360
-        elif left: # don't need == True
-            degree += 2
-            while degree > 359:
-                degree -= 360
+    print(carPosX, carPosY, baseDegree)
+    baseDegree %= 360
+    carPosX  = 100 * carPosX + 250
+    carPosY  = 100 * carPosY + 250
 
-        dx = math.cos(math.radians(baseDegree + degree))
-        dy = math.sin(math.radians(baseDegree + degree))
+    vehicle = Car(carPosX, carPosY, baseDegree)
 
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                pygame.quit()
 
-            if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
-                    pygame.quit()
-                elif event.key == K_a: # use constants K_a
-                    left = True
-                elif event.key == K_d: # use constants K_d
-                    right = True
-                elif event.key == K_w: # use constants K_w
-                    forward = True
-                elif event.key == K_s: # use constants K_s
-                    backward = True
+    def display_all(main_surface, display_list, text_list):
 
-            if event.type == KEYUP:
-                if event.key == K_a: # use constants K_a
-                    left = False
-                elif event.key == K_d: # use constants K_d
-                    right = False
-                elif event.key == K_w: # use constants K_w
-                    forward = False
-                elif event.key == K_s: # use constants K_s
-                    backward = False
-
-        baseDegree += degree
-        if (baseDegree > 360 or baseDegree < 360):
-            baseDegree = 0
-        if forward:
-            carPosY -= int(speed * dx)
-            carPosX -= int(speed * dy)
-        elif backward:
-            carPosY += int(speed * dx)
-            carPosX += int(speed * dy)
-        
-
-        # if forward:
-        #     if baseDegree == 0
-        #         carPosY += 1 
-        #     carPosX += 0
-        car = pygame.transform.rotate(car, degree)
         displayBackground(backMap, screenY, screenX, screen)
         displayMap(gameMap, screen, mapY, mapX, margin)
-        screen.blit(car, (carPosX, carPosY))
+
+        for element in display_list:
+            element.display(main_surface)
+        for element_val in range(0, len(text_list)):
+            main_surface.blit(font.render(str(text_list[element_val]), True, (0, 255, 0)), (10, 10 + (10 * element_val)))
+
+
+    def update_all(update_list):
+        for element in update_list:
+            element.update()
+
+    running = True
+    while running:
+        clock.tick(60)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                None
+
+        key = pygame.key.get_pressed()
+        if key[pygame.K_LEFT]:
+            vehicle.left = True
+        if key[pygame.K_RIGHT]:
+            vehicle.right = True
+        if key[pygame.K_UP]:
+            vehicle.forward = True
+        if key[pygame.K_DOWN]:
+            vehicle.backward = True
+        if key[pygame.K_r]:
+            vehicle.rect.x = 500
+            vehicle.rect.y = 300
+            vehicle.angle = 0
+
+        to_update = [vehicle]
+        to_display = [vehicle]
+        to_text = [clock.get_fps(),
+                    vehicle.angle,
+                    vehicle.current_speed,
+                    vehicle.move_x,
+                    vehicle.move_y,
+                    "F " + str(vehicle.forward),
+                    "L " + str(vehicle.left),
+                    "R " + str(vehicle.right)]
+
+        update_all(to_update)
+        display_all(screen, to_display, to_text)
         pygame.display.flip()
-        mainClock.tick(10)

@@ -7,7 +7,7 @@ from display import *
 def displayTxtMap(gameMap):
     for r in gameMap:
         for cell in r:
-            print(cell, end=' ')
+            print(cell, end=" ")
         print()
 
 def isMapFull(curY, curX, row, col, gameMap):
@@ -139,6 +139,7 @@ def generateMap(length, rowY, colX):
     return gameMap, idx + 1
 
 if __name__ == '__main__':
+
 
     screenX = 16
     screenY = 10
