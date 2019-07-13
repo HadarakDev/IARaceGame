@@ -5,6 +5,7 @@ import numpy as np
 import math
 from Car import *
 from utils import *
+import time
 
 
 def generateBackground(gameMap, backY, backX, mapY, mapX):
@@ -97,13 +98,13 @@ def getStart(gameMap, mapY, mapX):
     for y in range(0, mapY):
         for x in range(0, mapX):
             if gameMap[y][x] == "T":
-                return y, x, 180
+                return y * 100 +250 , x * 100 + 250, 180
             elif gameMap[y][x] == "B":
-                return y, x, 0
+                return y * 100 +250 , x * 100 + 250, 0
             elif gameMap[y][x] == "R":
-                return y, x, -90
+                return y * 100 +250 , x * 100 + 250, 270
             elif gameMap[y][x] == "L":
-                return y, x, 90
+                return y * 100 +250 , x * 100 + 250, 90
 
 def display(gameMap, screenY, screenX, mapY, mapX):
 
@@ -114,7 +115,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
 
     pygame.init()
     margin = 200
-    screen = pygame.display.set_mode((screenX * 100, screenY * 100))
+    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption('IA RACE GAME')
     backMap = generateBackground(gameMap, screenY, screenX, mapY,  mapX)
     displayBackground(backMap, screenY, screenX, screen)
@@ -123,13 +124,11 @@ def display(gameMap, screenY, screenX, mapY, mapX):
 
     # Params position initiale voiture
     carPosY, carPosX, baseDegree = getStart(gameMap, mapY, mapX)
-    print(carPosX, carPosY, baseDegree)
-    baseDegree %= 360
-    carPosX  = 100 * carPosX + 250
-    carPosY  = 100 * carPosY + 250
 
-    vehicle = Car(carPosX, carPosY, baseDegree)
 
+    vehicles = []
+    for id_car in range(1):
+        vehicles.append(Car(1, carPosX, carPosY, baseDegree))
 
     def display_all(main_surface, display_list, text_list):
 
@@ -141,14 +140,13 @@ def display(gameMap, screenY, screenX, mapY, mapX):
         for element_val in range(0, len(text_list)):
             main_surface.blit(font.render(str(text_list[element_val]), True, (0, 255, 0)), (10, 10 + (10 * element_val)))
 
-
     def update_all(update_list):
         for element in update_list:
-            element.update()
+            element.update(screen)
 
     running = True
     while running:
-        clock.tick(60)
+        clock.tick(30)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -158,28 +156,31 @@ def display(gameMap, screenY, screenX, mapY, mapX):
 
         key = pygame.key.get_pressed()
         if key[pygame.K_LEFT]:
-            vehicle.left = True
+            vehicles[0].left = True
         if key[pygame.K_RIGHT]:
-            vehicle.right = True
+            vehicles[0].right = True
         if key[pygame.K_UP]:
-            vehicle.forward = True
+            vehicles[0].forward = True
         if key[pygame.K_DOWN]:
-            vehicle.backward = True
+            vehicles[0].backward = True
         if key[pygame.K_r]:
-            vehicle.rect.x = 500
-            vehicle.rect.y = 300
-            vehicle.angle = 0
+            vehicles[0].rect.y, vehicles[0].rect.x,  vehicles[0].angle  = getStart(gameMap, mapY, mapX)
+            vehicles[0].crash, vehicles[0].end = False, False
+        if key[pygame.K_ESCAPE]:
+            pygame.quit()
 
-        to_update = [vehicle]
-        to_display = [vehicle]
-        to_text = [clock.get_fps(),
-                    vehicle.angle,
-                    vehicle.current_speed,
-                    vehicle.move_x,
-                    vehicle.move_y,
-                    "F " + str(vehicle.forward),
-                    "L " + str(vehicle.left),
-                    "R " + str(vehicle.right)]
+        to_update = vehicles
+        to_display = vehicles
+        to_text = []
+        # to_text = [clock.get_fps(),
+        #             vehicle.angle,
+        #             vehicle.current_speed,
+        #             vehicle.move_x,
+        #             vehicle.move_y,
+        #             "F " + str(vehicle.forward),
+        #             "L " + str(vehicle.left),
+        #             "R " + str(vehicle.right)]
+
 
         update_all(to_update)
         display_all(screen, to_display, to_text)

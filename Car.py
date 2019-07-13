@@ -1,16 +1,20 @@
 import pygame, math
 from utils import *
 
-
-
 class Car:
-    def __init__(self, carPosX, carPosY, baseDegree):
-        self.body = pygame.image.load("gameAsset/car.png")
+
+    maxDistanceSensor = 15
+
+    def __init__(self, id, carPosX, carPosY, baseDegree):
+        self.id = id
+        self.body = pygame.image.load("gameAsset/car2.png")
         self.rect = self.body.get_rect()
         self.rect.x = carPosX
         self.rect.y = carPosY
         self.rect.center = self.rect.x, self.rect.y
-
+        self.crash = False
+        self.end = False
+        self.score = 0
 
         # movement
         self.forward = False
@@ -19,10 +23,10 @@ class Car:
         self.right = False
         self.angle = baseDegree
 
-        self.turn_speed = 0.9
+        self.turn_speed = 1.4
         self.top_speed = 4
-        self.acceleration = 0.1
-        self.deceleration = 0.1
+        self.acceleration = 0.3
+        self.deceleration = 0.2
         self.current_speed = 0
         self.move_x = 0
         self.move_y = 0
@@ -34,6 +38,7 @@ class Car:
         self.backward = False
 
     def rotate(self):
+
         if self.angle > 360:
             self.angle = 0
         else:
@@ -64,9 +69,105 @@ class Car:
         temp_image = pygame.transform.rotate(self.body, self.angle)
         main_surface.blit(temp_image, (self.rect.x, self.rect.y))
 
-    def update(self):
-        self.move_x = 0
-        self.move_y = 0
-        self.rotate()
-        self.move()
-        self.reset_data()
+    def update(self, surface):
+        self.isCrash(surface)
+        self.isEnd(surface)
+        self.getSensorValue(surface)
+
+        if not self.end and not self.crash:
+            self.move_x = 0
+            self.move_y = 0
+            self.rotate()
+            self.move()
+            self.reset_data()
+            self.isCrash(surface)
+            self.isEnd(surface)
+
+    def getAllPixels(self):
+        pixels = []
+
+        if self.rect.topleft[0] < self.rect.bottomright[0]:
+            startW = self.rect.topleft[0]
+            endW = self.rect.bottomright[0]
+        else:
+            startW = self.rect.bottomright[0]
+            endW = self.rect.topleft[0]
+
+        if self.rect.topleft[1] < self.rect.bottomright[1]:
+            startH = self.rect.topleft[1]
+            endH = self.rect.bottomright[1]
+        else:
+            startH = self.rect.bottomright[1]
+            endH = self.rect.topleft[1]
+
+
+        for x in range (startW, endW + 1):
+            for y in range(startH, endH + 1):
+                 pixels.append( (x,y) )
+
+        return pixels
+
+    def displayBrokeCar(self, main_surface):
+        temp_image = pygame.image.load("gameAsset/boom.png")
+        main_surface.blit(temp_image, (self.rect.x, self.rect.y))
+        pygame.display.flip()
+
+    def isCrash(self, surface):
+        for pos in self.getAllPixels():
+            value = surface.get_at(pos)
+            if value == (255, 0, 0):
+                self.crash = True
+                self.displayBrokeCar(surface)
+
+    def isEnd(self, surface):
+        for pos in self.getAllPixels():
+            value = surface.get_at(pos)
+            if value == (107, 81, 117):
+                self.end
+
+    def passCheckpoint(self, surface):
+        for pos in self.getAllPixels():
+            value = surface.get_at(pos)
+            if value == (-1, -1, -1):
+                self.end
+
+    def getSensorValue(self, surface):
+        temp_image2 = pygame.image.load("elephant.jpg")
+
+        sensor_x_1 = self.rect.x
+        sensor_y_1 = self.rect.y
+
+        sensor_x_2 = self.rect.x
+        sensor_y_2 = self.rect.y
+
+
+        mid_sensor_value = 0
+        for i in [x * 0.1 for x in range(30, 45)]:
+            #middle
+            temp_image = pygame.image.load("abeille.jpg")
+            angle_rad = deg_to_rad(self.angle)
+            move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
+            move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
+            sensor_x_1 += move_sensor_x_1
+            sensor_y_1 += move_sensor_y_1
+            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            listes_pos = getPosNear( (sensor_x_1, sensor_y_1), 1)
+
+            if isPixelCrash(surface, listes_pos):
+                break
+            else:
+                mid_sensor_value += 1
+
+        print(mid_sensor_value)
+
+
+
+            # #side
+            # angle_rad = deg_to_rad(self.angle + 45)
+            # move_sensor_x_2 = -(float(i * math.sin(angle_rad)))
+            # move_sensor_y_2 = -(float(i * math.cos(angle_rad)))
+            # sensor_x_2 += move_sensor_x_2
+            # sensor_y_2 += move_sensor_y_2
+            # surface.blit(temp_image2, (sensor_x_2, sensor_y_2))
+        pygame.display.flip()
+

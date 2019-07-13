@@ -74,7 +74,6 @@ def determineStartDirection(curY, curX, row, col, gameMap, dico):
         if gameMap[curY + dico[direction]["y"]][curX + dico[direction]["x"]] == "0":
             return direction
     return "error"
-        
 
 def addStart(gameMap, rowY, colX, directions):
     coordY = random.randint(0, rowY)
@@ -141,12 +140,12 @@ def generateMap(length, rowY, colX):
 if __name__ == '__main__':
 
 
-    screenX = 16
+    screenX = 18
     screenY = 10
 
     gameMapX = screenX - 4
     gameMapY = screenY - 4
-    lenRequired = 10
+    lenRequired = 40
     gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
     while length < lenRequired:
         gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
