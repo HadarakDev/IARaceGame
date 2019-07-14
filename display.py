@@ -7,15 +7,16 @@ from Car import *
 from utils import *
 import time
 
+rep = "game"
 
 def generateBackground(gameMap, backY, backX, mapY, mapX):
-    backgroundSoil = pygame.image.load("./gameAsset/Soil_Tile.png").convert()
-    backgroundSoil1 = pygame.image.load("./gameAsset/Soil_Tile1.png").convert()
-    backgroundSoil2 = pygame.image.load("./gameAsset/Soil_Tile2.png").convert()
-    backgroundSoil3 = pygame.image.load("./gameAsset/Soil_Tile3.png").convert()
-    backgroundSoil4 = pygame.image.load("./gameAsset/Soil_Tile4.png").convert()
-    backgroundSoil5 = pygame.image.load("./gameAsset/Soil_Tile5.png").convert()
-    water = pygame.image.load("./gameAsset/Water_Tile.png").convert()
+    backgroundSoil = pygame.image.load("./gameAsset/%s/Soil_Tile.png" % rep).convert()
+    backgroundSoil1 = pygame.image.load("./gameAsset/%s/Soil_Tile1.png" % rep).convert()
+    backgroundSoil2 = pygame.image.load("./gameAsset/%s/Soil_Tile2.png" % rep).convert()
+    backgroundSoil3 = pygame.image.load("./gameAsset/%s/Soil_Tile3.png" % rep).convert()
+    backgroundSoil4 = pygame.image.load("./gameAsset/%s/Soil_Tile4.png" % rep).convert()
+    backgroundSoil5 = pygame.image.load("./gameAsset/%s/Soil_Tile5.png" % rep).convert()
+    water = pygame.image.load("./gameAsset/%s/Water_Tile.png" % rep).convert()
 
     # background = []
     background = [ backgroundSoil,  backgroundSoil1,  backgroundSoil2, backgroundSoil3, backgroundSoil4 , backgroundSoil5 ]
@@ -31,22 +32,22 @@ def generateBackground(gameMap, backY, backX, mapY, mapX):
     return backMap
 
 def displayMap(gameMap, screen, mapY, mapX, margin):
-    cornerTL = pygame.image.load("./gameAsset/cornerTL.png").convert_alpha()
-    cornerTR = pygame.image.load("./gameAsset/cornerTR.png").convert_alpha()
-    cornerBL = pygame.image.load("./gameAsset/cornerBL.png").convert_alpha()
-    cornerBR = pygame.image.load("./gameAsset/cornerBR.png").convert_alpha()
-    horizontal = pygame.image.load("./gameAsset/horizontal.png").convert()
-    vertical = pygame.image.load("./gameAsset/vertical.png").convert()
+    cornerTL = pygame.image.load("./gameAsset/%s/cornerTL.png" % rep).convert_alpha()
+    cornerTR = pygame.image.load("./gameAsset/%s/cornerTR.png" % rep).convert_alpha()
+    cornerBL = pygame.image.load("./gameAsset/%s/cornerBL.png" % rep).convert_alpha()
+    cornerBR = pygame.image.load("./gameAsset/%s/cornerBR.png" % rep).convert_alpha()
+    horizontal = pygame.image.load("./gameAsset/%s/horizontal.png" % rep).convert()
+    vertical = pygame.image.load("./gameAsset/%s/vertical.png" % rep).convert()
 
-    verticalLStart = pygame.image.load("./gameAsset/verticalLStart.png").convert()
-    verticalRStart = pygame.image.load("./gameAsset/verticalRStart.png").convert()
-    horizontalBStart = pygame.image.load("./gameAsset/horizontalBStart.png").convert()
-    horizontalTStart = pygame.image.load("./gameAsset/horizontalTStart.png").convert()
+    verticalLStart = pygame.image.load("./gameAsset/%s/verticalLStart.png" % rep).convert()
+    verticalRStart = pygame.image.load("./gameAsset/%s/verticalRStart.png" % rep).convert()
+    horizontalBStart = pygame.image.load("./gameAsset/%s/horizontalBStart.png" % rep).convert()
+    horizontalTStart = pygame.image.load("./gameAsset/%s/horizontalTStart.png" % rep).convert()
 
-    verticalLEnd = pygame.image.load("./gameAsset/verticalLEnd.png").convert()
-    verticalREnd = pygame.image.load("./gameAsset/verticalREnd.png").convert()
-    horizontalBEnd = pygame.image.load("./gameAsset/horizontalBEnd.png").convert()
-    horizontalTEnd = pygame.image.load("./gameAsset/horizontalTEnd.png").convert()
+    verticalLEnd = pygame.image.load("./gameAsset/%s/verticalLEnd.png" % rep).convert()
+    verticalREnd = pygame.image.load("./gameAsset/%s/verticalREnd.png" % rep).convert()
+    horizontalBEnd = pygame.image.load("./gameAsset/%s/horizontalBEnd.png" % rep).convert()
+    horizontalTEnd = pygame.image.load("./gameAsset/%s/horizontalTEnd.png" % rep).convert()
 
     xPos = margin
     yPos = margin
@@ -152,8 +153,8 @@ def display(gameMap, screenY, screenX, mapY, mapX):
 
 
     vehicles = []
-    for id_car in range(1, number_players + 1):
-        vehicles.append(Car(id_car, carPosX, carPosY, baseDegree))
+    for id_player in range(1, number_players + 1):
+        vehicles.append(Car(id_player, carPosX, carPosY, baseDegree))
 
     # GAME
     running = True
@@ -168,19 +169,21 @@ def display(gameMap, screenY, screenX, mapY, mapX):
                 pygame.quit()
         #recopier ici les touches joueurs
 
-        for id_car in range(1, number_players + 1):
-            print("START turn %d %d" % (turn, id_car))
-            print("capteurs")
-            print("STOP turn %d %d" % (turn, id_car))
-            next_input_must_be("START actions %d %d" % (turn, id_car))
+        for id_player in range(1, number_players + 1):
+            print("START turn %d %d" % (turn, id_player))
+            sensors = vehicles[id_player - 1].getSensorsToString(screen)
+            print(sensors)
+
+            print("STOP turn %d %d" % (turn, id_player))
+            next_input_must_be("START actions %d %d" % (turn, id_player))
             action = input()
             if action == "R":
-                vehicles[id_car - 1].right = True
+                vehicles[id_player - 1].right = True
             elif action == "L":
-                vehicles[id_car - 1].left = True
+                vehicles[id_player - 1].left = True
             elif action == "F":
-                vehicles[id_car - 1].forward = True
-            next_input_must_be("STOP actions %d %d" % (turn, id_car))
+                vehicles[id_player - 1].forward = True
+            next_input_must_be("STOP actions %d %d" % (turn, id_player))
 
         to_update = vehicles
         to_display = vehicles

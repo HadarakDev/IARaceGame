@@ -7,7 +7,7 @@ class Car:
 
     def __init__(self, id, carPosX, carPosY, baseDegree):
         self.id = id
-        self.body = pygame.image.load("gameAsset/car2.png")
+        self.body = pygame.image.load("gameAsset/game/car2.png")
         self.rect = self.body.get_rect()
         self.rect.x = carPosX
         self.rect.y = carPosY
@@ -243,4 +243,5 @@ class Car:
 
         return [left_sensor1_value, left_sensor2_value, mid_sensor_value, right_sensor2_value, right_sensor1_value]
 
-
+    def getSensorsToString(self, surface):
+        return ";".join( map(str, self.getSensorValue(surface) ))

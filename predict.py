@@ -21,34 +21,23 @@ def predict_next_move(layers, W, X):
                 summ = summ + Wn[y] * X[x]
             res.append(math.tanh(summ))
         X = res
-
-
         
     output = X[:-1]
 
-    print(numpy.argmax(output))
     return numpy.argmax(output)
 
 
+def take_decision(layers, W, X):
 
-layers = [2, 3, 3, 2]
-acc = 0
-for i in range(len(layers) - 1):
-    acc = acc + layers[i] * layers[i + 1] + layers[i + 1]
-W = []
+    result = predict_next_move(layers, W, X)
 
-w = 0
-for i in range(acc):
-    W.append(w)
-    w = w + 1
+    if result == 0:
+        return "F"
+    elif result == 1:
+        return  "L"
+    elif result == 2:
+        return "R"
 
-X = []
-for i in range(layers[0]):
-    X.append(i + 10)
 
-print("DATA")
-print(layers)
-print(W)
-print(X)
-print("FEED FORWARD")
-predict_next_move(layers, W, X)
+
+
