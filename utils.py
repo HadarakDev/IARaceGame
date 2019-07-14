@@ -1,4 +1,5 @@
 import math
+import sys
 
 
 def deg_to_rad(degrees):
@@ -19,3 +20,32 @@ def isPixelCrash(surface, liste_pos):
         if value == (255, 0, 0):
            return True
     return False
+
+def next_input_must_be(value):
+    val = input()
+    if val != value:
+        print("expected input was '%s' instead of '%s'"%(value, val), file=sys.stderr)
+        quit()
+
+
+        # for event in pygame.event.get():
+        #     if event.type == pygame.QUIT:
+        #         running = False
+        #
+        #     if event.type == pygame.KEYDOWN:
+        #         None
+        #
+        # key = pygame.key.get_pressed()
+        # if key[pygame.K_LEFT]:
+        #     vehicles[0].left = True
+        # if key[pygame.K_RIGHT]:
+        #     vehicles[0].right = True
+        # if key[pygame.K_UP]:
+        #     vehicles[0].forward = True
+        # if key[pygame.K_DOWN]:
+        #     vehicles[0].backward = True
+        # if key[pygame.K_r]:
+        #     vehicles[0].rect.y, vehicles[0].rect.x,  vehicles[0].angle  = getStart(gameMap, mapY, mapX)
+        #     vehicles[0].crash, vehicles[0].end = False, False
+        # if key[pygame.K_ESCAPE]:
+        #     pygame.quit()

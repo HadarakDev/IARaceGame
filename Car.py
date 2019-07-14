@@ -233,11 +233,11 @@ class Car:
             else:
                 right_sensor2_value += 1
 
-        print("mid    :", mid_sensor_value)
-        print("left1  :", left_sensor1_value)
-        print("left2  :", left_sensor2_value)
-        print("right1 :", right_sensor1_value)
-        print("right2 :", right_sensor2_value)
+        # print("mid    :", mid_sensor_value)
+        # print("left1  :", left_sensor1_value)
+        # print("left2  :", left_sensor2_value)
+        # print("right1 :", right_sensor1_value)
+        # print("right2 :", right_sensor2_value)
 
         pygame.display.flip()
 

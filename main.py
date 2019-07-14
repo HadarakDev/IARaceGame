@@ -1,8 +1,11 @@
+from os import environ
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
 import pygame
 import random
 from pygame.locals import *
 from  data import *
 from display import *
+import sys
 
 def displayTxtMap(gameMap):
     for r in gameMap:
@@ -109,35 +112,57 @@ def generateMap(length, rowY, colX):
     colX -= 1
     if length > rowY * colX:
         length = rowY * colX - 2
-    with open("map.txt", "w") as file:
 
-        gameMap, coordX, coordY, direction = addStart(gameMap, rowY, colX, directions)
-        for idx in range(0, length):
+
+    gameMap, coordX, coordY, direction = addStart(gameMap, rowY, colX, directions)
+    for idx in range(0, length):
+        t = random.choice(tiles[direction])
+        nextDirection = t["output_" + direction]
+
+        newY = coordY + directions[direction]["y"] + directions[nextDirection]["y"]
+        newX = coordX + directions[direction]["x"] + directions[nextDirection]["x"]
+        i = 0
+        while newX < 0 or newX > colX or newY < 0 or newY > rowY or gameMap[newY][newX] != "0":
             t = random.choice(tiles[direction])
             nextDirection = t["output_" + direction]
-
             newY = coordY + directions[direction]["y"] + directions[nextDirection]["y"]
             newX = coordX + directions[direction]["x"] + directions[nextDirection]["x"]
-            i = 0
-            while newX < 0 or newX > colX or newY < 0 or newY > rowY or gameMap[newY][newX] != "0":
-                t = random.choice(tiles[direction])
-                nextDirection = t["output_" + direction]
-                newY = coordY + directions[direction]["y"] + directions[nextDirection]["y"]
-                newX = coordX + directions[direction]["x"] + directions[nextDirection]["x"]
-                i = i + 1
-                if (i > 10):
-                    return gameMap, idx
-            coordY += directions[direction]["y"]
-            coordX += directions[direction]["x"]
-            gameMap[coordY][coordX] = t["symbol"]
-            direction = nextDirection
-            if isMapFull(coordY + directions[direction]["y"], coordX + directions[direction]["x"], rowY, colX, gameMap) == 1:
-                gameMap = addEndTile(gameMap, coordY, coordX, direction, directions)
-                return gameMap, idx + 1
+            i = i + 1
+            if (i > 10):
+                return gameMap, idx
+        coordY += directions[direction]["y"]
+        coordX += directions[direction]["x"]
+        gameMap[coordY][coordX] = t["symbol"]
+        direction = nextDirection
+        if isMapFull(coordY + directions[direction]["y"], coordX + directions[direction]["x"], rowY, colX, gameMap) == 1:
+            gameMap = addEndTile(gameMap, coordY, coordX, direction, directions)
+            return gameMap, idx + 1
     gameMap = addEndTile(gameMap, coordY, coordX, direction, directions)
+
+    # #save
+    # with open("map.txt", "w") as file:
+    #     for a in gameMap:
+    #         for b in a:
+    #             file.write(b)
+    #         file.write("\n")
+
+    #load
+    gameMap = []
+    with open("monCircuit.txt", "r") as file:
+        data = file.readlines()
+        for line in data:
+            tmp = []
+            line = line.replace("\n", "")
+            for char in line:
+                tmp.append(char)
+            gameMap.append(tmp)
+
     return gameMap, idx + 1
 
 if __name__ == '__main__':
+
+
+
 
 
     screenX = 18

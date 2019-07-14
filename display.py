@@ -107,17 +107,31 @@ def getStart(gameMap, mapY, mapX):
                 return y * 100 +250 , x * 100 + 250, 90
 
 def display(gameMap, screenY, screenX, mapY, mapX):
+    def display_all(main_surface, display_list):
 
+        displayBackground(backMap, screenY, screenX, screen)
+        displayMap(gameMap, screen, mapY, mapX, margin)
+
+        for element in display_list:
+            element.display(main_surface)
+
+    def update_all(update_list):
+        for element in update_list:
+            element.update(screen)
+
+    # Initialisation
     pygame.font.init()
 
     clock = pygame.time.Clock()
+    clock.tick(30)
+
     font = pygame.font.SysFont("", 20)
 
     pygame.init()
     margin = 200
     screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     pygame.display.set_caption('IA RACE GAME')
-    backMap = generateBackground(gameMap, screenY, screenX, mapY,  mapX)
+    backMap = generateBackground(gameMap, screenY, screenX, mapY, mapX)
     displayBackground(backMap, screenY, screenX, screen)
     displayMap(gameMap, screen, mapY, mapX, margin)
     pygame.display.flip()
@@ -126,62 +140,53 @@ def display(gameMap, screenY, screenX, mapY, mapX):
     carPosY, carPosX, baseDegree = getStart(gameMap, mapY, mapX)
 
 
+    # read number of players
+    next_input_must_be("START players")
+    number_players = int(input())
+    next_input_must_be("STOP players")
+    # print("number_players", number_players)
+
+    print("START settings")
+    print("Nothing")
+    print("STOP settings")
+
+
     vehicles = []
-    for id_car in range(1):
-        vehicles.append(Car(1, carPosX, carPosY, baseDegree))
+    for id_car in range(1, number_players + 1):
+        vehicles.append(Car(id_car, carPosX, carPosY, baseDegree))
 
-    def display_all(main_surface, display_list, text_list):
-
-        displayBackground(backMap, screenY, screenX, screen)
-        displayMap(gameMap, screen, mapY, mapX, margin)
-
-        for element in display_list:
-            element.display(main_surface)
-        for element_val in range(0, len(text_list)):
-            main_surface.blit(font.render(str(text_list[element_val]), True, (0, 255, 0)), (10, 10 + (10 * element_val)))
-
-    def update_all(update_list):
-        for element in update_list:
-            element.update(screen)
-
+    # GAME
     running = True
+    turn = 1
     while running:
-        clock.tick(30)
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            key = pygame.key.get_pressed()
+            if key[pygame.K_ESCAPE]:
+                pygame.quit()
+        #recopier ici les touches joueurs
 
-            if event.type == pygame.KEYDOWN:
-                None
-
-        key = pygame.key.get_pressed()
-        if key[pygame.K_LEFT]:
-            vehicles[0].left = True
-        if key[pygame.K_RIGHT]:
-            vehicles[0].right = True
-        if key[pygame.K_UP]:
-            vehicles[0].forward = True
-        if key[pygame.K_DOWN]:
-            vehicles[0].backward = True
-        if key[pygame.K_r]:
-            vehicles[0].rect.y, vehicles[0].rect.x,  vehicles[0].angle  = getStart(gameMap, mapY, mapX)
-            vehicles[0].crash, vehicles[0].end = False, False
-        if key[pygame.K_ESCAPE]:
-            pygame.quit()
+        for id_car in range(1, number_players + 1):
+            print("START turn %d %d" % (turn, id_car))
+            print("capteurs")
+            print("STOP turn %d %d" % (turn, id_car))
+            next_input_must_be("START actions %d %d" % (turn, id_car))
+            action = input()
+            if action == "R":
+                vehicles[id_car - 1].right = True
+            elif action == "L":
+                vehicles[id_car - 1].left = True
+            elif action == "F":
+                vehicles[id_car - 1].forward = True
+            next_input_must_be("STOP actions %d %d" % (turn, id_car))
 
         to_update = vehicles
         to_display = vehicles
-        to_text = []
-        # to_text = [clock.get_fps(),
-        #             vehicle.angle,
-        #             vehicle.current_speed,
-        #             vehicle.move_x,
-        #             vehicle.move_y,
-        #             "F " + str(vehicle.forward),
-        #             "L " + str(vehicle.left),
-        #             "R " + str(vehicle.right)]
-
 
         update_all(to_update)
-        display_all(screen, to_display, to_text)
+        display_all(screen, to_display)
         pygame.display.flip()
+
+        turn += 1
