@@ -7,6 +7,21 @@ def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
 
+		# for (int l = 1; l < layer_count; l++)
+		# {
+		# 	for (int j = 1; j < (layers[l] + 1); j++)
+		# 	{
+		# 		double res = 0.0;
+		# 		for (int i = 0; i < layers[l - 1] + 1; i++)
+		# 			res += W[l][j][i] * X[l - 1][i];
+
+		# 		if (l == layer_count - 1)
+		# 			X[l][j] = res;
+		# 		else
+		# 			X[l][j] = std::tanh(res);
+		# 	}
+		# }
+
 def predict_next_move(layers, W, X):
 
     #normalize
@@ -15,26 +30,24 @@ def predict_next_move(layers, W, X):
 
     acc = 0
     X.append(1)  # biais
-    for i in range(len(layers) - 1):
+    for l in range(1, len(layers)):
         
         end = layers[i] * layers[i + 1] + layers[i + 1]
         Wn = W[acc : acc + end]
         # print("HERE", Wn, file=sys.stderr)
         acc = acc + end
-        res = []
-        for x in range(layers[i + 1]):
-            for j in range(layers[i]):
-                res.append(np.dot(Wn[x], X[j]))
-
-        X = res
+        res = 0
+        Xn = []
+        for j in range(1, layers[l] + 1):
+            for i in range(layers[l - 1] + 1):
+                res = res + Wn[i], X[j]
+            if l == len(layers) - 1:
+                Xn.append(res)
+            else:
+                Xn.append(math.tanh(res)) 
+        X = Xn
         print(i, len(X), X, file=sys.stderr)
 
-    res = []
-    for x in range(layers[-1:][0]):
-        for j in range(layers[-2:-1][0]):
-            res.append(np.dot(Wn[x], X[j]))
-
-    X = res
     output = X[:-1]
 
     return np.argmax(output)
