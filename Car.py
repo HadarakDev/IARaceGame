@@ -14,6 +14,8 @@ class Car:
         self.rect.center = self.rect.x, self.rect.y
         self.crash = False
         self.end = False
+        self.checkpointBefore = False
+        self.checkpoint = False
         self.score = 0
 
         # movement
@@ -72,7 +74,9 @@ class Car:
     def update(self, surface):
         self.isCrash(surface)
         self.isEnd(surface)
+        self.updateScore(surface)
         self.getSensorValue(surface)
+        self.isOnCheckPoint(surface)
 
         if not self.end and not self.crash:
             self.move_x = 0
@@ -80,8 +84,7 @@ class Car:
             self.rotate()
             self.move()
             self.reset_data()
-            self.isCrash(surface)
-            self.isEnd(surface)
+
 
     def getAllPixels(self):
         pixels = []
@@ -108,11 +111,17 @@ class Car:
         return pixels
 
     def displayBrokeCar(self, main_surface):
-        temp_image = pygame.image.load("gameAsset/boom.png")
+        temp_image = pygame.image.load("gameAsset/game/boom.png")
+        main_surface.blit(temp_image, (self.rect.x, self.rect.y))
+        pygame.display.flip()
+
+    def displayVictory(self, main_surface):
+        temp_image = pygame.image.load("gameAsset/game/victory.png")
         main_surface.blit(temp_image, (self.rect.x, self.rect.y))
         pygame.display.flip()
 
     def isCrash(self, surface):
+        # self.crash = False
         for pos in self.getAllPixels():
             value = surface.get_at(pos)
             if value == (255, 0, 0):
@@ -124,12 +133,7 @@ class Car:
             value = surface.get_at(pos)
             if value == (107, 81, 117):
                 self.end = True
-
-    def passCheckpoint(self, surface):
-        for pos in self.getAllPixels():
-            value = surface.get_at(pos)
-            if value == (-1, -1, -1):
-                self.end
+                self.displayVictory(surface)
 
     #return list of sensor left to right
     def getSensorValue(self, surface):
@@ -245,3 +249,24 @@ class Car:
 
     def getSensorsToString(self, surface):
         return ";".join( map(str, self.getSensorValue(surface) ))
+
+    def isOnCheckPoint(self, surface):
+        self.checkpointBefore = self.checkpoint
+        self.checkpoint = False
+        for pos in self.getAllPixels():
+            value = surface.get_at(pos)
+            # print(value)
+            if value == (138, 0, 159):
+                # print("CHECKPOINT", file=sys.stderr)
+                self.checkpoint = True
+
+
+    def updateScore(self, surface):
+
+        self.score -= 1
+
+        if self.end:
+            self.score += 100000
+
+        if self.checkpoint is True and self.checkpointBefore is False:
+            self.score += 1000

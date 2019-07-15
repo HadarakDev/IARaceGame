@@ -148,7 +148,7 @@ def generateMap(length, rowY, colX):
 
     #load
     gameMap = []
-    with open("monCircuit.txt", "r") as file:
+    with open("map.txt", "r") as file:
         data = file.readlines()
         for line in data:
             tmp = []

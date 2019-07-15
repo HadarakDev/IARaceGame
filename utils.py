@@ -28,8 +28,15 @@ def next_input_must_be(value):
         quit()
 
 def getSensorsFromString(input):
-    return input.split(";")
+    tmp = input.split(";")
+    return [float(x) for x in tmp]
 
+
+def parse_other_information(string):
+    tab = string.split(";")
+    isCrash = True if tab[1] == "True" else False
+    score = int(tab[3])
+    return isCrash, score
 
 # for event in pygame.event.get():
 #     if event.type == pygame.QUIT:

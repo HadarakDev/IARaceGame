@@ -8,7 +8,7 @@ import predict
 nb_poids = 34
 layers = [5, 3, 3]
 W = [ x*0.1 for x in range(nb_poids)]
-X = [ x for x in range(5)]
+X = [ x*0.1 for x in range(5)]
 
 
 next_input_must_be("START player")
@@ -23,13 +23,17 @@ while line != "STOP settings":
 grid = []
 
 while True:
+    # Get sensors information
     next_input_must_be("START turn")
     string_sensors = input()
-    sensors = getSensorsFromString(string_sensors)
-    # print(sensors, file=sys.stderr)
-
+    other_information = input()
     next_input_must_be("STOP turn")
+
+    sensors = getSensorsFromString(string_sensors)
+    isCrash, score = parse_other_information(other_information)
+    print(isCrash, score, file=sys.stderr)
+
+    # Send decision
     print("START action")
-    print(take_decision(layers, W, X))
-    print(take_decision(layers, W, X), file=sys.stderr)
+    print(take_decision(layers, W, sensors))
     print("STOP action")
