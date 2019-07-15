@@ -20,6 +20,7 @@ def get_score(individu, format_reseau, nb_poids):
 
     poids_reseau = individu.tolist()
 
+
     while True:
         # Get sensors information
         next_input_must_be("START turn")
@@ -39,8 +40,9 @@ def get_score(individu, format_reseau, nb_poids):
             print("STOP action")
             return score
         else:
-            print(take_decision(format_reseau, poids_reseau, sensors))
-            print(take_decision(format_reseau, poids_reseau, sensors), file=sys.stderr)
+            result = take_decision(format_reseau, poids_reseau, sensors)
+            print(result)
+            print("ici", result, file=sys.stderr)
             print("STOP action")
 
 
@@ -64,14 +66,14 @@ if __name__ == "__main__":
 
     # Entrees
     nb_capteur = 5
-    nb_population = 50
-    nb_elite = 20
+    nb_population = 20
+    nb_elite = 5
     nb_generation = 500
-    taux_mutation = 0.1
-    max_valeur_mutation = 20                     #intervalle [ - max_valeur_mutation : max_valeur_mutation]
-    max_valeur_initialisation = 10                     #intervalle [ - max_valeur_mutation : max_valeur_mutation]
-    format_reseau = [5, 3, 2, 3]
-    nb_poids = 39
+    taux_mutation = 0.3
+    max_valeur_mutation = 0.1                     # intervalle [ - max_valeur_mutation : max_valeur_mutation]
+    max_valeur_initialisation = 0.01              # intervalle [ - max_valeur_mutation : max_valeur_mutation]
+    format_reseau = [5, 10, 5, 3]
+    nb_poids = 137
 
 
     # Passer intro du jeu
@@ -84,14 +86,18 @@ if __name__ == "__main__":
     population = np.random.rand(nb_population, nb_poids) * max_valeur_mutation - max_valeur_mutation
 
 
+
     for i in range(0, nb_generation):
 
         print("Nombre epoch :", i + 1, file=sys.stderr)
+
 
         # evaluation
         score = np.empty(shape=nb_population)
         for indice, individu in enumerate(population, 0):
             print("epoch : %s, individu n°%s" % (i + 1, indice), file=sys.stderr)
+
+
             score[indice] = get_score(individu, format_reseau, nb_poids)           # return score de la voiture
 
         # Selection des meilleurs

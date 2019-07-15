@@ -124,7 +124,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
     pygame.font.init()
 
     clock = pygame.time.Clock()
-    clock.tick(30)
+    clock.tick(60)
 
     font = pygame.font.SysFont("", 20)
 

@@ -144,13 +144,13 @@ class Car:
 
         mid_sensor_value = 0
         for i in [x * 0.1 for x in range(30, 45)]:
-            temp_image = pygame.image.load("abeille.jpg")
+            # temp_image = pygame.image.load("abeille.jpg")
             angle_rad = deg_to_rad(self.angle)
             move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
             move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
             sensor_x_1 += move_sensor_x_1
             sensor_y_1 += move_sensor_y_1
-            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            # surface.blit(temp_image, (sensor_x_1, sensor_y_1))
             listes_pos = getPosNear( (sensor_x_1, sensor_y_1), zone_explore_pixel)
 
             if isPixelCrash(surface, listes_pos):
@@ -164,13 +164,13 @@ class Car:
         left_sensor1_value = 0
         for i in [x * 0.1 for x in range(30, 45)]:
             # left 1
-            temp_image = pygame.image.load("elephant.jpg")
+            # temp_image = pygame.image.load("elephant.jpg")
             angle_rad = deg_to_rad(self.angle + 70)
             move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
             move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
             sensor_x_1 += move_sensor_x_1
             sensor_y_1 += move_sensor_y_1
-            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            # surface.blit(temp_image, (sensor_x_1, sensor_y_1))
             listes_pos = getPosNear((sensor_x_1, sensor_y_1), zone_explore_pixel)
 
             if isPixelCrash(surface, listes_pos):
@@ -184,13 +184,13 @@ class Car:
         left_sensor2_value = 0
         for i in [x * 0.1 for x in range(30, 45)]:
             # left 2
-            temp_image = pygame.image.load("phasme.jpg")
+            # temp_image = pygame.image.load("phasme.jpg")
             angle_rad = deg_to_rad(self.angle + 25)
             move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
             move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
             sensor_x_1 += move_sensor_x_1
             sensor_y_1 += move_sensor_y_1
-            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            # surface.blit(temp_image, (sensor_x_1, sensor_y_1))
             listes_pos = getPosNear((sensor_x_1, sensor_y_1), zone_explore_pixel)
 
             if isPixelCrash(surface, listes_pos):
@@ -204,13 +204,13 @@ class Car:
         right_sensor1_value = 0
         for i in [x * 0.1 for x in range(30, 45)]:
             # right 1
-            temp_image = pygame.image.load("elephant.jpg")
+            # temp_image = pygame.image.load("elephant.jpg")
             angle_rad = deg_to_rad(self.angle - 70)
             move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
             move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
             sensor_x_1 += move_sensor_x_1
             sensor_y_1 += move_sensor_y_1
-            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            # surface.blit(temp_image, (sensor_x_1, sensor_y_1))
             listes_pos = getPosNear((sensor_x_1, sensor_y_1), zone_explore_pixel)
 
             if isPixelCrash(surface, listes_pos):
@@ -223,13 +223,13 @@ class Car:
         right_sensor2_value = 0
         for i in [x * 0.1 for x in range(30, 45)]:
             # left 1
-            temp_image = pygame.image.load("phasme.jpg")
+            # temp_image = pygame.image.load("phasme.jpg")
             angle_rad = deg_to_rad(self.angle - 25)
             move_sensor_x_1 = -(float(i * math.sin(angle_rad)))
             move_sensor_y_1 = -(float(i * math.cos(angle_rad)))
             sensor_x_1 += move_sensor_x_1
             sensor_y_1 += move_sensor_y_1
-            surface.blit(temp_image, (sensor_x_1, sensor_y_1))
+            # surface.blit(temp_image, (sensor_x_1, sensor_y_1))
             listes_pos = getPosNear((sensor_x_1, sensor_y_1), zone_explore_pixel)
 
             if isPixelCrash(surface, listes_pos):
@@ -243,7 +243,7 @@ class Car:
         # print("right1 :", right_sensor1_value)
         # print("right2 :", right_sensor2_value)
 
-        pygame.display.flip()
+        # pygame.display.flip()
 
         return [left_sensor1_value, left_sensor2_value, mid_sensor_value, right_sensor2_value, right_sensor1_value]
 
