@@ -7,7 +7,7 @@ from Car import *
 from utils import *
 import time
 
-rep = "game"
+rep = "train"
 
 def generateBackground(gameMap, backY, backX, mapY, mapX):
     backgroundSoil = pygame.image.load("./gameAsset/%s/Soil_Tile.png" % rep).convert()
@@ -173,6 +173,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
             print("START turn %d %d" % (turn, id_player))
             sensors = vehicles[id_player - 1].getSensorsToString(screen)
             print(sensors)
+            print("CRASH;%s;Score;%s" % (vehicles[id_player - 1].crash, vehicles[id_player - 1].score))
 
             print("STOP turn %d %d" % (turn, id_player))
             next_input_must_be("START actions %d %d" % (turn, id_player))
@@ -184,6 +185,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
             elif action == "F":
                 vehicles[id_player - 1].forward = True
             next_input_must_be("STOP actions %d %d" % (turn, id_player))
+
 
         to_update = vehicles
         to_display = vehicles
