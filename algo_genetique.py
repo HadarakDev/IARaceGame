@@ -71,7 +71,7 @@ if __name__ == "__main__":
     nb_generation = 500
     taux_mutation = 0.3
     max_valeur_mutation = 0.1                     # intervalle [ - max_valeur_mutation : max_valeur_mutation]
-    max_valeur_initialisation = 0.01              # intervalle [ - max_valeur_mutation : max_valeur_mutation]
+    max_valeur_initialisation = 1                # intervalle [ - max_valeur_mutation : max_valeur_mutation]
     format_reseau = [5, 10, 5, 3]
     nb_poids = 137
 

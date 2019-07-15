@@ -11,11 +11,11 @@ myDll = CDLL(dllabspath)
 # predict
 myDll.predict.argtypes = [ct.c_void_p,
                           ct.c_void_p, ct.c_int, ct.c_int, ct.c_void_p]
-myDll.predict.restype = ct.c_double
+myDll.predict.restype = POINTER(ct.c_double)
 
 # loadModel
 myDll.loadModel.argtypes = [ct.c_void_p, ct.c_int, ct.c_int, ct.c_void_p]
-myDll.loadModel.restype = ct.c_double
+myDll.loadModel.restype = ct.c_void_p
 
 
 def predict(W, pyLayers, pyLayer_count, pyInputCountPerSample, pyX):
@@ -26,6 +26,7 @@ def predict(W, pyLayers, pyLayer_count, pyInputCountPerSample, pyX):
     res = myDll.predict(
         W, layers, layer_count, inputCountPerSample, X
     )
+    # print("here", res)
     l = [res[i] for i in range(pyLayers[-1] + 1)]
     return l
 

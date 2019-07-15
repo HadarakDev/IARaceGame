@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import sys
+from dll import *
 
 
 def sigmoid(x):
@@ -55,8 +56,14 @@ def predict_next_move(layers, W, X):
 
 def take_decision(layers, W, X):
 
+    # normalize
+    X = [(x - 0) / 16 for x in X]
 
-    result = predict_next_move(layers, W, X)
+    myWC = loadModel(layers, len(layers),  layers[0], W)
+
+    result = predict(myWC, layers, len(layers), layers[0], X)
+
+    result = np.argmax(np.array(result))
 
     if result == 0:
         return "F"
