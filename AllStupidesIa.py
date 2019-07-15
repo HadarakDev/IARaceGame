@@ -2,7 +2,7 @@ from utils import *
 from predict import *
 import sys
 import predict
-#action : F -> Front -> 0, L -> Left -> 1, R -> Right -> 2
+#action : F -> Front -> 0, L -> Left -> 1, R -> Right -> 2, RESTART
 
 
 nb_poids = 34
@@ -19,7 +19,6 @@ line = input()
 while line != "STOP settings":
     line = input()
 
-grid = []
 
 while True:
     # Get sensors information
@@ -34,5 +33,8 @@ while True:
 
     # Send decision
     print("START action")
-    print(take_decision(layers, W, sensors))
+    if isCrash:
+        print("RESTART")
+    else:
+        print(take_decision(layers, W, sensors))
     print("STOP action")

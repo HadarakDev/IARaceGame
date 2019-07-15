@@ -74,9 +74,10 @@ class Car:
     def update(self, surface):
         self.isCrash(surface)
         self.isEnd(surface)
+        self.isOnCheckPoint(surface)
         self.updateScore(surface)
         self.getSensorValue(surface)
-        self.isOnCheckPoint(surface)
+
 
         if not self.end and not self.crash:
             self.move_x = 0
@@ -84,7 +85,6 @@ class Car:
             self.rotate()
             self.move()
             self.reset_data()
-
 
     def getAllPixels(self):
         pixels = []
@@ -269,4 +269,7 @@ class Car:
             self.score += 100000
 
         if self.checkpoint is True and self.checkpointBefore is False:
-            self.score += 1000
+            self.score += 200
+
+        if self.score < -300:
+            self.crash = True

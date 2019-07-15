@@ -170,21 +170,27 @@ def display(gameMap, screenY, screenX, mapY, mapX):
         #recopier ici les touches joueurs
 
         for id_player in range(1, number_players + 1):
-            print("START turn %d %d" % (turn, id_player))
-            sensors = vehicles[id_player - 1].getSensorsToString(screen)
-            print(sensors)
-            print("CRASH;%s;Score;%s" % (vehicles[id_player - 1].crash, vehicles[id_player - 1].score))
 
+            # envoie information a l'IA
+            print("START turn %d %d" % (turn, id_player))
+            print(vehicles[id_player - 1].getSensorsToString(screen))
+            print("CRASH;%s;Score;%s" % (vehicles[id_player - 1].crash, vehicles[id_player - 1].score))
             print("STOP turn %d %d" % (turn, id_player))
+
+            # ecoute choix IA
             next_input_must_be("START actions %d %d" % (turn, id_player))
             action = input()
+            next_input_must_be("STOP actions %d %d" % (turn, id_player))
+
+            # effectuer action
             if action == "R":
                 vehicles[id_player - 1].right = True
             elif action == "L":
                 vehicles[id_player - 1].left = True
             elif action == "F":
                 vehicles[id_player - 1].forward = True
-            next_input_must_be("STOP actions %d %d" % (turn, id_player))
+            elif action == "RESTART":
+                vehicles[id_player - 1] = Car(id_player, carPosX, carPosY, baseDegree)
 
 
         to_update = vehicles
