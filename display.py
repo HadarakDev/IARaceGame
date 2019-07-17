@@ -130,7 +130,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
 
     pygame.init()
     margin = 200
-    screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
+    screen = pygame.display.set_mode((1400, 800))#, pygame.FULLSCREEN)
     pygame.display.set_caption('IA RACE GAME')
     backMap = generateBackground(gameMap, screenY, screenX, mapY, mapX)
     displayBackground(backMap, screenY, screenX, screen)
@@ -157,6 +157,7 @@ def display(gameMap, screenY, screenX, mapY, mapX):
         vehicles.append(Car(id_player, carPosX, carPosY, baseDegree))
 
     # GAME
+    begin = 1
     running = True
     turn = 1
     while running:
@@ -192,10 +193,13 @@ def display(gameMap, screenY, screenX, mapY, mapX):
             elif action == "RESTART":
                 vehicles[id_player - 1] = Car(id_player, carPosX, carPosY, baseDegree)
 
-
+        if begin == 1:
+            time.sleep(3)
+            begin = 0
+        #print(id_player, file=sys.stderr)
         to_update = vehicles
         to_display = vehicles
-
+        
         update_all(to_update)
         display_all(screen, to_display)
         pygame.display.flip()

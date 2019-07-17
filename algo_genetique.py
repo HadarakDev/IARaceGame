@@ -30,7 +30,7 @@ def get_score(individu, format_reseau, nb_poids):
 
         sensors = getSensorsFromString(string_sensors)
         isCrash, score = parse_other_information(other_information)
-        print(isCrash, score, file=sys.stderr)
+        #print(isCrash, score, file=sys.stderr)
 
         # Send decision
         print("START action")
@@ -42,7 +42,8 @@ def get_score(individu, format_reseau, nb_poids):
         else:
             result = take_decision(format_reseau, poids_reseau, sensors)
             print(result)
-            print("ici", result, file=sys.stderr)
+            # if (result != "F"):
+            #     print("ici", result, file=sys.stderr)
             print("STOP action")
 
 
@@ -61,20 +62,23 @@ def getEliteIndice(score, number_elite):
 
     return np.argpartition(score,-number_elite)[-number_elite:]
 
-
+def getNbWeights(weights):
+    res = 0
+    for i in range(0, len(weights[:-1])):
+        res += (weights[i] + 1) * weights[i + 1]
+    return res + weights[-1] + 1
 if __name__ == "__main__":
 
     # Entrees
     nb_capteur = 5
-    nb_population = 20
-    nb_elite = 5
+    nb_population = 100
+    nb_elite = 40
     nb_generation = 500
-    taux_mutation = 0.3
-    max_valeur_mutation = 0.1                     # intervalle [ - max_valeur_mutation : max_valeur_mutation]
-    max_valeur_initialisation = 1                # intervalle [ - max_valeur_mutation : max_valeur_mutation]
-    format_reseau = [5, 10, 5, 3]
-    nb_poids = 137
-
+    taux_mutation = 0.1
+    max_valeur_mutation = 0.1                   # intervalle [ - max_valeur_mutation : max_valeur_mutation]
+    max_valeur_initialisation = 1               # intervalle [ - max_valeur_mutation : max_valeur_mutation]
+    format_reseau = [5, 5, 5, 3]
+    nb_poids = getNbWeights(format_reseau)
 
     # Passer intro du jeu
     print_params_dispacher()
@@ -83,7 +87,8 @@ if __name__ == "__main__":
 
 
     # Generation de la population initiale
-    population = np.random.rand(nb_population, nb_poids) * max_valeur_mutation - max_valeur_mutation
+    population = (np.random.random_sample((nb_population, nb_poids)) - 0.5) * 2 #max_valeur_mutation - max_valeur_mutation
+
 
 
 

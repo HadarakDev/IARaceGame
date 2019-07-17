@@ -2,6 +2,7 @@ from ctypes import *
 from ctypes.wintypes import *
 import ctypes as ct
 import os
+import sys
 from collections.abc import Iterable
 
 dll_name = "pyProject.dll"
@@ -19,6 +20,7 @@ myDll.loadModel.restype = ct.c_void_p
 
 
 def predict(W, pyLayers, pyLayer_count, pyInputCountPerSample, pyX):
+    #print("pyX", pyX, file=sys.stderr)
     layers = (ct.c_int * len(pyLayers))(*pyLayers)
     layer_count = ct.c_int(pyLayer_count)
     X = (ct.c_double * len(pyX))(*pyX)
@@ -28,6 +30,7 @@ def predict(W, pyLayers, pyLayer_count, pyInputCountPerSample, pyX):
     )
     # print("here", res)
     l = [res[i] for i in range(pyLayers[-1] + 1)]
+    #print(l, file=sys.stderr)
     return l
 
 
@@ -35,5 +38,6 @@ def loadModel(pyLayers, pyLayer_count,  pyInputCountPerSample, pyW):
     layers = (ct.c_int * len(pyLayers))(*pyLayers)
     layer_count = ct.c_int(pyLayer_count)
     W = (ct.c_double * len(pyW))(*pyW)
+    #print(pyW, file=sys.stderr)
     inputCountPerSample = ct.c_int(pyInputCountPerSample)
     return myDll.loadModel(layers, layer_count, inputCountPerSample, W)

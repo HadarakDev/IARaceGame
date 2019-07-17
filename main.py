@@ -165,11 +165,11 @@ if __name__ == '__main__':
 
 
 
-    screenX = 18
-    screenY = 10
+    screenX = 14
+    screenY = 8
 
-    gameMapX = screenX - 4
-    gameMapY = screenY - 4
+    gameMapX = screenX - 2
+    gameMapY = screenY - 2
     lenRequired = 10
     gameMap, length = generateMap(lenRequired, gameMapY, gameMapX)
     while length < lenRequired:

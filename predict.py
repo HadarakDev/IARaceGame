@@ -63,6 +63,7 @@ def take_decision(layers, W, X):
 
     result = predict(myWC, layers, len(layers), layers[0], X)
 
+    result.pop(0)
     result = np.argmax(np.array(result))
 
     if result == 0:

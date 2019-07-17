@@ -7,6 +7,9 @@ class Car:
 
     def __init__(self, id, carPosX, carPosY, baseDegree):
         self.id = id
+        
+        self.oldScore = 0
+        self.countScoreNotUpdated = 0
         self.body = pygame.image.load("gameAsset/game/car2.png")
         self.rect = self.body.get_rect()
         self.rect.x = carPosX
@@ -261,15 +264,27 @@ class Car:
                 self.checkpoint = True
 
 
+    def checkImproveScore(self):
+        if self.oldScore - 1 == self.score:
+            self.countScoreNotUpdated += 1
+           
+        else:
+            self.countScoreNotUpdated = 0
+
     def updateScore(self, surface):
-
+        self.oldScore = self.score
         self.score -= 1
-
+        
+        self.checkImproveScore()
+        #print(self.score, file=sys.stderr)
         if self.end:
             self.score += 100000
 
         if self.checkpoint is True and self.checkpointBefore is False:
             self.score += 200
-
-        if self.score < -300:
+        
+        if self.score < -100:
+            self.crash = True
+        if self.countScoreNotUpdated == 100:
+            self.score += 100
             self.crash = True
