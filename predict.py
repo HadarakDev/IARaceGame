@@ -7,22 +7,6 @@ from dll import *
 def sigmoid(x):
     return 1 / (1 + math.exp(-x))
 
-
-		# for (int l = 1; l < layer_count; l++)
-		# {
-		# 	for (int j = 1; j < (layers[l] + 1); j++)
-		# 	{
-		# 		double res = 0.0;
-		# 		for (int i = 0; i < layers[l - 1] + 1; i++)
-		# 			res += W[l][j][i] * X[l - 1][i];
-
-		# 		if (l == layer_count - 1)
-		# 			X[l][j] = res;
-		# 		else
-		# 			X[l][j] = std::tanh(res);
-		# 	}
-		# }
-
 def predict_next_move(layers, W, X):
 
     #normalize
